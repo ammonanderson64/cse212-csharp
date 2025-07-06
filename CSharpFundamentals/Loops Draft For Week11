@@ -1,0 +1,179 @@
+Loops in the Task Manager Program
+When building a Task Manager, loops are essential for repeatedly interacting with the user, managing the list of tasks, and processing input/output. Below we will explain how different types of loops (while, for, and foreach) are used in the program, why they are chosen, and examples of their use.
+
+While Loops
+The while loop runs as long as a condition is true. It's perfect for situations where we want to continue running a block of code until a user chooses to stop or some condition changes.
+
+In the Task Manager, a while loop is used to display the menu repeatedly until the user decides to exit:
+
+csharp
+Copy
+Edit
+bool exit = false;
+
+while (!exit)
+{
+    Console.WriteLine("\n--- Task Manager ---");
+    Console.WriteLine("1. Add Task");
+    Console.WriteLine("2. Remove Task");
+    Console.WriteLine("3. View Tasks");
+    Console.WriteLine("4. Save Tasks");
+    Console.WriteLine("5. Exit");
+    Console.WriteLine("6. Sort Tasks by Due Date");
+    Console.WriteLine("7. Sort Tasks by Priority");
+    Console.WriteLine("8. Mark Task as Complete");
+
+    Console.Write("Choose an option (1-8): ");
+    string choice = Console.ReadLine();
+
+    switch (choice)
+    {
+        case "1":
+            // Add task logic
+            break;
+        case "5":
+            exit = true; // User chooses to exit, loop ends
+            break;
+        // Other cases...
+    }
+}
+Explanation:
+
+The loop continues indefinitely until exit becomes true.
+
+This means the menu will keep showing, letting the user select multiple commands.
+
+If the user selects "5" to exit, exit is set to true, which stops the loop.
+
+For Loops
+The for loop is ideal when you know how many times you want to repeat something. For example, when removing a task by name, you want to loop through the task list (by index) to find the matching task.
+
+csharp
+Copy
+Edit
+for (int i = 0; i < tasks.Count; i++)
+{
+    if (tasks[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+    {
+        tasks.RemoveAt(i);
+        Console.WriteLine($"Task \"{name}\" removed.");
+        break; // Exit loop after removal
+    }
+}
+Explanation:
+
+We use a for loop because we want to iterate over each index of the tasks list.
+
+As soon as we find the task with the matching name, we remove it and break out of the loop.
+
+Using a for loop (with indexes) allows us to safely remove an item during iteration.
+
+Foreach Loops
+The foreach loop is the best choice when you want to iterate over each item in a collection without worrying about indexes. It’s commonly used for displaying tasks or loading tasks from a file.
+
+Displaying tasks:
+csharp
+Copy
+Edit
+foreach (Task task in tasks)
+{
+    Console.WriteLine(task);
+}
+Explanation:
+
+The loop runs once for each Task object in the tasks list.
+
+Each task is printed without the need for manual indexing.
+
+Loading tasks from a file:
+csharp
+Copy
+Edit
+foreach (string line in File.ReadAllLines(FilePath))
+{
+    Task task = Task.FromFileString(line);
+    if (task != null)
+    {
+        tasks.Add(task);
+    }
+}
+Explanation:
+
+Each line in the file corresponds to one task.
+
+The loop reads every line, converts it to a Task, and adds it to the list.
+
+Summary of Loop Usage in Task Manager
+Loop Type	Purpose	Example Usage
+while	Repeat menu until user chooses to exit	Menu loop with exit condition
+for	Loop a fixed number of times with index access	Removing a task by name (using index)
+foreach	Iterate over collections without modifying them	Displaying tasks, loading tasks file
+
+Full Example of Loop Usage in Task Manager
+csharp
+Copy
+Edit
+bool exit = false;
+
+while (!exit)
+{
+    Console.WriteLine("\n--- Task Manager ---");
+    Console.WriteLine("1. Add Task");
+    Console.WriteLine("2. Remove Task");
+    Console.WriteLine("3. View Tasks");
+    Console.WriteLine("4. Save Tasks");
+    Console.WriteLine("5. Exit");
+    Console.Write("Choose an option (1-5): ");
+    string choice = Console.ReadLine();
+
+    switch (choice)
+    {
+        case "1":
+            // Add task (not shown here)
+            break;
+        case "2":
+            Console.Write("Enter task name to remove: ");
+            string name = Console.ReadLine();
+
+            // FOR loop to find and remove task by name
+            bool removed = false;
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                if (tasks[i].Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                {
+                    tasks.RemoveAt(i);
+                    Console.WriteLine($"Task \"{name}\" removed.");
+                    removed = true;
+                    break;
+                }
+            }
+            if (!removed)
+                Console.WriteLine($"Task \"{name}\" not found.");
+            break;
+        case "3":
+            // FOREACH loop to display all tasks
+            foreach (Task task in tasks)
+            {
+                Console.WriteLine(task);
+            }
+            break;
+        case "5":
+            exit = true;
+            break;
+        default:
+            Console.WriteLine("Invalid choice.");
+            break;
+    }
+}
+
+Console.WriteLine("Goodbye!");
+Conclusion
+Loops in the Task Manager program allow the software to:
+
+Keep running until the user exits (while)
+
+Iterate through tasks with control over indexes (for)
+
+Easily display or load tasks from collections (foreach)
+
+Understanding which loop to use and when is crucial for writing clean, readable, and effective code.
